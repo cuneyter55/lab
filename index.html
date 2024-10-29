@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Öğrenci Bilgileri</title>
+    <style>
+        table { width: 50%; border-collapse: collapse; margin: 20px; }
+        table, th, td { border: 1px solid black; }
+        th, td { padding: 10px; text-align: center; }
+        #detay { font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Öğrenciye Tıklandığında Bilgilerin Ekrana Getirilmesi</h2>
+    <div id="detay">Öğrenci Bilgilerini Görmek İçin Tıklayın</div>
+    <table>
+        <tr>
+            <th>Numara</th>
+            <th>AdSoyad</th>
+        </tr>
+        <tr onclick="getOgrenciBilgisi('111111')">
+            <td>111111</td>
+            <td>Duygu AKŞEHİR</td>
+        </tr>
+        <tr onclick="getOgrenciBilgisi('222222')">
+            <td>222222</td>
+            <td>Ayşe ÇALIŞKAN</td>
+        </tr>
+        <tr onclick="getOgrenciBilgisi('333333')">
+            <td>333333</td>
+            <td>Semih ARSLAN</td>
+        </tr>
+        <tr onclick="getOgrenciBilgisi('444444')">
+            <td>444444</td>
+            <td>Mehmet ERKOÇ</td>
+        </tr>
+    </table>
+
+    <script>
+        function getOgrenciBilgisi(numara) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    displayOgrenciBilgisi(this, numara);
+                }
+            };
+            xhttp.open("GET", "catalog.xml", true);
+            xhttp.send();
+        }
+
+        function displayOgrenciBilgisi(xml, numara) {
+            var xmlDoc = xml.responseXML;
+            var ogrenciler = xmlDoc.getElementsByTagName("ogrenci");
+            for (var i = 0; i < ogrenciler.length; i++) {
+                if (ogrenciler[i].getElementsByTagName("numara")[0].childNodes[0].nodeValue == numara) {
+                    var adsoyad = ogrenciler[i].getElementsByTagName("adsoyad")[0].childNodes[0].nodeValue;
+                    var bolum = ogrenciler[i].getElementsByTagName("bolum")[0].childNodes[0].nodeValue;
+                    var sinif = ogrenciler[i].getElementsByTagName("sinif")[0].childNodes[0].nodeValue;
+
+                    document.getElementById("detay").innerHTML = 
+                        "Numara: " + numara + "<br>" +
+                        "AdSoyad: " + adsoyad + "<br>" +
+                        "Bölüm: " + bolum + "<br>" +
+                        "Sınıf: " + sinif;
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
